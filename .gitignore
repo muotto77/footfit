@@ -1,0 +1,50 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+.npm
+
+# ข้อมูล
+/postgres/data/
+/redis/data/
+/minio/data/
+/grafana/data/
+/prometheus/data/
+/temp-videos/
+/nginx/logs/
+/logs/
+*.log
+
+# ไฟล์ environment
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ไฟล์ที่สร้างโดย Docker
+.dockerignore
+
+# ไฟล์สำรอง
+*.bak
+*.backup
+*.swp
+*~
+
+# ข้อมูล OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ไฟล์ SSL
+*.pem
+*.key
+/nginx/ssl/
+
+# ไฟล์ชั่วคราว
+/tmp
+*.tmp 
