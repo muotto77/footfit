@@ -17,14 +17,15 @@ RUN npm ci --only=production
 
 # คัดลอกโค้ดแอปพลิเคชัน
 COPY . .
+COPY ../supabase.js ./supabase.js
 
-# สร้างไดเรกทอรีสำหรับประมวลผลวิดีโอชั่วคราว
-RUN mkdir -p /tmp/videos
+# สร้างไดเรกทอรีสำหรับประมวลผลวิดีโอชั่วคราวและบันทึก
+RUN mkdir -p /app/temp
+RUN mkdir -p /app/logs
 
-# ตั้งค่าสภาพแวดล้อม Node.js ให้เหมาะสมกับ CPU 8 คอร์ 16 เธรด RAM 32GB
+# ตั้งค่าสภาพแวดล้อม Node.js
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 ENV NODE_ENV=production
-ENV WEB_CONCURRENCY=4
 ENV FFMPEG_PATH=/usr/bin/ffmpeg
 ENV FFPROBE_PATH=/usr/bin/ffprobe
 
@@ -32,4 +33,4 @@ ENV FFPROBE_PATH=/usr/bin/ffprobe
 EXPOSE 3001
 
 # เริ่มต้นแอปพลิเคชัน
-CMD ["node", "src/index.js"] 
+CMD ["node", "app.js"] 

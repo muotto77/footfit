@@ -1,44 +1,6 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:14-alpine
-    container_name: footfit-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: footfit
-      POSTGRES_PASSWORD: your_strong_password
-      POSTGRES_DB: footfit
-      PGDATA: /var/lib/postgresql/data
-    volumes:
-      - ./postgres/data:/var/lib/postgresql/data
-      - ./postgres/init:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
-    deploy:
-      resources:
-        limits:
-          memory: 10G
-        reservations:
-          memory: 4G
-    command: postgres -c shared_buffers=2GB -c effective_cache_size=6GB -c work_mem=16MB -c maintenance_work_mem=512MB -c max_connections=100 -c max_worker_processes=8 -c max_parallel_workers=8 -c max_parallel_workers_per_gather=4
-
-  # Redis Cache
-  redis:
-    image: redis:7-alpine
-    container_name: footfit-redis
-    restart: always
-    volumes:
-      - ./redis/data:/data
-    ports:
-      - "6379:6379"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-    command: redis-server --save 60 1 --loglevel warning --maxmemory 1536mb --maxmemory-policy allkeys-lru
-
   # MinIO Object Storage
   minio:
     image: minio/minio
@@ -55,7 +17,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
+          memory: 2G
     command: server /data --console-address ":9001"
 
   # MinIO Client (MC) for bucket setup
@@ -68,78 +30,17 @@ services:
       /bin/sh -c "
       sleep 10;
       /usr/bin/mc config host add myminio http://minio:9000 your_minio_access_key your_minio_secret_key;
-      /usr/bin/mc mb --ignore-existing myminio/footfit;
-      /usr/bin/mc mb --ignore-existing myminio/footfit-profile;
-      /usr/bin/mc mb --ignore-existing myminio/footfit-video;
-      /usr/bin/mc mb --ignore-existing myminio/footfit-team;
-      /usr/bin/mc mb --ignore-existing myminio/footfit-product;
-      /usr/bin/mc policy set download myminio/footfit/public;
-      /usr/bin/mc policy set download myminio/footfit-profile/public;
-      /usr/bin/mc policy set download myminio/footfit-video/public;
+      /usr/bin/mc mb --ignore-existing myminio/videos;
+      /usr/bin/mc mb --ignore-existing myminio/profiles;
+      /usr/bin/mc mb --ignore-existing myminio/teams;
+      /usr/bin/mc mb --ignore-existing myminio/products;
+      /usr/bin/mc mb --ignore-existing myminio/temp;
+      /usr/bin/mc policy set download myminio/videos;
+      /usr/bin/mc policy set download myminio/profiles;
+      /usr/bin/mc policy set download myminio/teams;
+      /usr/bin/mc policy set download myminio/products;
       exit 0;
       "
-
-  # Backend API
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: footfit-backend
-    restart: always
-    depends_on:
-      - postgres
-      - redis
-      - minio
-    environment:
-      NODE_ENV: production
-      PORT: 3000
-      HOST: 0.0.0.0
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USER: footfit
-      DB_PASSWORD: your_strong_password
-      DB_NAME: footfit
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      MINIO_ENDPOINT: minio
-      MINIO_PORT: 9000
-      MINIO_ACCESS_KEY: your_minio_access_key
-      MINIO_SECRET_KEY: your_minio_secret_key
-      MINIO_BUCKET: footfit
-      JWT_SECRET: your_long_random_jwt_secret
-      JWT_EXPIRE: 86400
-      NODE_OPTIONS: "--max-old-space-size=3072"
-      WEB_CONCURRENCY: 8
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
-    ports:
-      - "3000:3000"
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-
-  # Nginx Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: footfit-nginx
-    restart: always
-    depends_on:
-      - backend
-      - minio
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/data:/var/www/html
-      - ./nginx/logs:/var/log/nginx
-      - ./nginx/ssl:/etc/nginx/ssl
-    ports:
-      - "80:80"
-      - "443:443"
-    deploy:
-      resources:
-        limits:
-          memory: 1G
 
   # Video Processing Service (FFmpeg)
   video-processor:
@@ -149,75 +50,65 @@ services:
     container_name: footfit-video-processor
     restart: always
     depends_on:
-      - redis
       - minio
     environment:
       NODE_ENV: production
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      MINIO_ENDPOINT: minio
+      PORT: 3001
+      HOST: 0.0.0.0
+      MINIO_ENDPOINT: footfit-minio
       MINIO_PORT: 9000
       MINIO_ACCESS_KEY: your_minio_access_key
       MINIO_SECRET_KEY: your_minio_secret_key
-      MINIO_BUCKET: footfit-video
+      MINIO_USE_SSL: "false"
+      MINIO_BUCKET_NAME: videos
+      SUPABASE_URL: https://your-project-ref.supabase.co
+      SUPABASE_SERVICE_KEY: your-supabase-service-key
+      FFMPEG_PATH: /usr/bin/ffmpeg
+      FFPROBE_PATH: /usr/bin/ffprobe
+      TEMP_DIR: /app/temp
       NODE_OPTIONS: "--max-old-space-size=2048"
+      MAX_VIDEO_SIZE_MB: "50"
+      VIDEO_PROCESSING_TIMEOUT_SEC: "300"
+      THUMBNAIL_QUALITY: "80"
+      THUMBNAIL_SIZE: "320x180"
+      MAX_VIDEO_DURATION_SEC: "60"
+      VIDEO_OUTPUT_FORMAT: "mp4"
+      VIDEO_BITRATE: "1500k"
+      VIDEO_RESOLUTION: "720p"
+      SERVER_PORT: "3001"
+      LOG_LEVEL: "info"
     volumes:
       - ./video-processor:/app
-      - /app/node_modules
-      - ./temp-videos:/tmp/videos
+      - ./temp-videos:/app/temp
+    ports:
+      - "3001:3001"
     deploy:
       resources:
         limits:
           memory: 3G
 
-  # Prometheus for monitoring
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: footfit-prometheus
-    restart: always
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./prometheus/data:/prometheus
-    ports:
-      - "9090:9090"
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--storage.tsdb.retention.time=30d'
-
-  # Grafana for visualization
-  grafana:
-    image: grafana/grafana:latest
-    container_name: footfit-grafana
+  # Nginx Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: footfit-nginx
     restart: always
     depends_on:
-      - prometheus
+      - minio
+      - video-processor
     volumes:
-      - ./grafana/data:/var/lib/grafana
-      - ./grafana/provisioning:/etc/grafana/provisioning
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=footfit_admin
-      - GF_USERS_ALLOW_SIGN_UP=false
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/data:/var/www/html
+      - ./nginx/logs:/var/log/nginx
     ports:
-      - "3001:3000"
+      - "80:80"
+      - "443:443"
     deploy:
       resources:
         limits:
           memory: 1G
 
 volumes:
-  postgres_data:
-  redis_data:
   minio_data:
-  prometheus_data:
-  grafana_data:
 
 networks:
   default:

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FootFit - แพลตฟอร์มฟุตบอลโซเชียล</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #10b981;
+            --dark: #374151;
+            --light: #f9fafb;
+            --gray: #e5e7eb;
+            --danger: #ef4444;
+        }
+        
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        .hero {
+            background-color: var(--primary);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2em;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0d9668;
+            transform: translateY(-2px);
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-footer {
+            padding: 15px 20px;
+            background-color: var(--gray);
+            text-align: center;
+        }
+        
+        .link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .tech-stack {
+            background-color: white;
+            padding: 40px 0;
+            margin: 40px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tech-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .tech-item {
+            text-align: center;
+            width: 150px;
+            padding: 20px;
+            background-color: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .tech-item h3 {
+            margin: 10px 0 5px;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Foot<span>Fit</span></div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>FootFit - แพลตฟอร์มฟุตบอลโซเชียล</h1>
+            <p>พัฒนาทักษะ, จัดทีม, จองสนาม, ซื้อขายสินค้า และติดตามข่าวสารฟุตบอลในที่เดียว</p>
+            <a href="#services" class="btn">เริ่มต้นใช้งาน</a>
+        </div>
+    </section>
+    
+    <section class="container" id="services">
+        <h2>บริการของเรา</h2>
+        <div class="cards">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Supabase Backend</h3>
+                </div>
+                <div class="card-body">
+                    <p>ระบบฐานข้อมูลและ API สำหรับแอปพลิเคชัน FootFit รองรับการจัดการผู้ใช้งาน, การยืนยันตัวตน, และการเรียกใช้ข้อมูลผ่าน Supabase</p>
+                </div>
+                <div class="card-footer">
+                    <a href="https://your-project-ref.supabase.co" target="_blank" class="link">ไปที่ Supabase Dashboard</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>MinIO Storage</h3>
+                </div>
+                <div class="card-body">
+                    <p>บริการจัดเก็บไฟล์และวิดีโอสำหรับแอปพลิเคชัน FootFit ใช้งานง่ายและมีประสิทธิภาพสูง รองรับการจัดการไฟล์ขนาดใหญ่</p>
+                </div>
+                <div class="card-footer">
+                    <a href="/minio-console/" target="_blank" class="link">ไปที่ MinIO Console</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Video Processor</h3>
+                </div>
+                <div class="card-body">
+                    <p>ระบบประมวลผลวิดีโอที่ช่วยให้ผู้ใช้สามารถอัปโหลดวิดีโอฝึกซ้อมฟุตบอลพร้อมสร้าง thumbnail อัตโนมัติ</p>
+                </div>
+                <div class="card-footer">
+                    <a href="/api/videos/upload" target="_blank" class="link">ทดสอบ API</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="tech-stack">
+        <div class="container">
+            <h2 class="tech-title">เทคโนโลยีที่ใช้</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <h3>Supabase</h3>
+                    <p>ฐานข้อมูลและ API</p>
+                </div>
+                <div class="tech-item">
+                    <h3>MinIO</h3>
+                    <p>จัดเก็บไฟล์และวิดีโอ</p>
+                </div>
+                <div class="tech-item">
+                    <h3>FFmpeg</h3>
+                    <p>ประมวลผลวิดีโอ</p>
+                </div>
+                <div class="tech-item">
+                    <h3>Docker</h3>
+                    <p>จัดการ container</p>
+                </div>
+                <div class="tech-item">
+                    <h3>Nginx</h3>
+                    <p>เว็บเซิร์ฟเวอร์</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 FootFit. สงวนลิขสิทธิ์.</p>
+        </div>
+    </footer>
+</body>
+</html> 
