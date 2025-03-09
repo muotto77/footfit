@@ -12,7 +12,7 @@ const {
   validateUserToken, 
   saveVideoData, 
   updateVideoData 
-} = require('../supabase');
+} = require('./supabase');
 
 // โหลดตัวแปรสภาพแวดล้อม
 require('dotenv').config();

@@ -28,21 +28,19 @@ FootFit ใช้สถาปัตยกรรมแบบผสมผสาน
 
 ```
 footfit/
-├── video-processor/           # บริการประมวลผลวิดีโอ
-│   ├── Dockerfile             # คำสั่งสร้าง image สำหรับ video-processor
-│   ├── app.js                 # ไฟล์หลักของระบบประมวลผลวิดีโอ
-│   ├── package.json           # dependencies และสคริปต์
-│   └── .env                   # ตัวแปรสภาพแวดล้อม
-├── minio/                     # MinIO Object Storage
-│   └── data/                  # พื้นที่จัดเก็บข้อมูล MinIO
 ├── nginx/                     # Nginx Web Server
 │   ├── conf.d/                # ไฟล์การตั้งค่า Nginx
 │   ├── data/                  # ไฟล์ static สำหรับเว็บ
 │   └── logs/                  # บันทึกการทำงาน
-├── temp-videos/               # พื้นที่จัดเก็บวิดีโอชั่วคราว
-├── docker-compose.yml         # ไฟล์การตั้งค่า Docker Compose
-├── supabase.js                # ไฟล์เชื่อมต่อกับ Supabase
-└── README.md                  # ไฟล์นี้
+├── video-processor/           # บริการประมวลผลวิดีโอ
+│   ├── Dockerfile             # คำสั่งสร้าง image
+│   ├── app.js                 # ไฟล์หลัก
+│   ├── package.json           # dependencies
+│   └── .env                   # ตัวแปรสภาพแวดล้อม
+├── .gitignore                 # ตั้งค่า Git
+├── docker-compose.yml         # ตั้งค่า Docker
+├── README.md                  # ไฟล์คำอธิบาย
+└── supabase.js                # ไฟล์เชื่อมต่อ Supabase
 ```
 
 ## ขั้นตอนการติดตั้ง

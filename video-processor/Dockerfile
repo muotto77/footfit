@@ -17,7 +17,6 @@ RUN npm ci --only=production
 
 # คัดลอกโค้ดแอปพลิเคชัน
 COPY . .
-COPY ../supabase.js ./supabase.js
 
 # สร้างไดเรกทอรีสำหรับประมวลผลวิดีโอชั่วคราวและบันทึก
 RUN mkdir -p /app/temp
